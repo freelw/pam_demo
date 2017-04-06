@@ -18,8 +18,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     const struct pam_conv *conv;
     struct pam_message resp_message;
     const struct pam_message *msg[1];
-    struct pam_response resp;
-    struct pam_response *presp = &resp;
+    struct pam_response *presp;
       
     resp_message.msg_style = PAM_PROMPT_ECHO_OFF;  
     resp_message.msg = "come on:";  
@@ -32,6 +31,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     printf("retVal conv : %d\n", retval);
     printf("resp->resp : %s\n", presp->resp);
     free(presp->resp);
+    free(presp);
     //free(resp);
     //const char* pUsername;
     //retval = pam_get_user(pamh, (const char**)&pUsername, "TUsername: ");
