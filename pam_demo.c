@@ -18,8 +18,8 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     const struct pam_conv *conv;
     struct pam_message resp_message;
     const struct pam_message *msg[1];
-    const struct pam_response resp[1];
-    const struct pam_response *presp = resp;
+    struct pam_response resp[1];
+    struct pam_response *presp = resp;
       
     resp_message.msg_style = PAM_PROMPT_ECHO_OFF;  
     resp_message.msg = "come on:";  
