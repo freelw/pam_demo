@@ -28,7 +28,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     retval = conv->conv(1, msg, &resp, conv->appdata_ptr);
     printf("retVal conv : %d\n", retval);
     printf("resp->resp : %s\n", resp->resp);
-    free(resp->resp);
+    free(resp);
     //const char* pUsername;
     //retval = pam_get_user(pamh, (const char**)&pUsername, "TUsername: ");
     //printf("name0 : %s\n", pUsername);
