@@ -25,7 +25,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     msg[0] = &resp_message; 
     int retval = pam_get_item(pamh, PAM_CONV, (const void **)&conv);
     printf("retVal get_conv : %d\n", retval);
-    retval = conv->conv(1, msg, &resp, conv->appdata_ptr);
+    retval = conv->conv(1, msg, resp, conv->appdata_ptr);
     printf("retVal conv : %d\n", retval);
     printf("resp->resp : %s\n", resp[0]->resp);
     //free(resp);
