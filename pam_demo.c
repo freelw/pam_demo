@@ -21,7 +21,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     struct pam_response *presp;
       
     resp_message.msg_style = PAM_PROMPT_ECHO_OFF;  
-    resp_message.msg = "come on:";  
+    resp_message.msg = "come on:\033[47mabc\n\033[0m";  
     msg[0] = &resp_message; 
     int retval = pam_get_item(pamh, PAM_CONV, (const void **)&conv);
     printf("retVal get_conv : %d\n", retval);
