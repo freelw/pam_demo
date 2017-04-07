@@ -7,6 +7,14 @@
 #define PAM_SM_SESSION
 #define PAM_SM_PASSWORD
 #include <security/pam_modules.h>
+#include "qrencode.h"
+
+
+int create_qr_code(const char *str)
+{
+    QRcode *qrcode=QRcode_encodeString(str, 0, QR_ECLEVEL_H, QR_MODE_8, 1);
+    return 0;
+}
 
 PAM_EXTERN int pam_sm_setcred( pam_handle_t *pamh, int flags, int argc, const char **argv ) {
     printf("setcred\n");
