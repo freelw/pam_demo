@@ -16,21 +16,23 @@ int create_qr_code(const char *str)
 {
     memset(sqrcode, 0, sizeof(sqrcode));
     size_t index = 0;
-    QRcode *qrcode=QRcode_encodeString(str, 0, QR_ECLEVEL_H, QR_MODE_8, 1);
+    QRcode *qrcode=QRcode_encodeString(str, 2, QR_ECLEVEL_L, QR_MODE_8, 0);
     for (size_t i = 0; i < 25; ++ i) {
         for (size_t j = 0; j < 25; ++ j) {
             if(qrcode->data[i*25+j]&0x01) {
-                sqrcode[index++] = ' ';
+                char _[] = "\033[45m  \033[0m";
+		strcpy(sqrcode+index, _);
+		index += strlen(_);
                 printf("#");
             } else {
-                char _[] = "\033[47m\n \033[0m";
+                char _[] = "\033[46m  \033[0m";
 		strcpy(sqrcode+index, _);
 		index += strlen(_);
                 printf("_");
             }
-            sqrcode[index++] = '\n';
-            printf("\n");
         }
+        sqrcode[index++] = '\n';
+        printf("\n");
     }
     return 0;
 }
