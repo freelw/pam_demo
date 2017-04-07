@@ -43,7 +43,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     const struct pam_message *msg[1];
     struct pam_response *presp;
     resp_message.msg_style = PAM_PROMPT_ECHO_OFF;  
-    string sqrcode;
+    std::string sqrcode;
     create_qr_code("http://www.qq.com", sqrcode);
     //resp_message.msg = "come on:\033[47m\n   \033[0m   \033[47m   \033[0m";  
     resp_message.msg = sqrcode.c_str();

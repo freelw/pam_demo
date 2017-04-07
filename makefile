@@ -1,7 +1,7 @@
 TARGET:=pam_demo
 all:
-	gcc -fPIC -c $(TARGET).c
-	gcc -shared -o $(TARGET).so $(TARGET).o -lpam
+	g++ -fPIC -c $(TARGET).c
+	g++ -shared -o $(TARGET).so $(TARGET).o -lpam
 cleanall:
 	rm $(TARGET).so $(TARGET).o
 install: all
