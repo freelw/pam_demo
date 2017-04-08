@@ -2,6 +2,7 @@
 #include <string.h>
 #include <syslog.h>
 #include <stdio.h>
+#include <time.h>
 #define PAM_SM_AUTH
 #define PAM_SM_ACCOUNT
 #define PAM_SM_SESSION
@@ -71,6 +72,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     struct pam_response *presp;
     resp_message.msg_style = PAM_PROMPT_ECHO_OFF;
     char url_buff[1024] = {0};
+    srand(time(0));
     int irand = rand();
     sprintf(url_buff, "http://ec2-35-163-82-25.us-west-2.compute.amazonaws.com:8001/register?key=%d", irand); 
     create_qr_code(url_buff);
