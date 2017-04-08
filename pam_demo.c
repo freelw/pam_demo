@@ -15,15 +15,16 @@ int create_qr_code(const char *str)
     memset(sqrcode, 0, sizeof(sqrcode));
     size_t index = 0;
     QRcode *qrcode=QRcode_encodeString(str, 2, QR_ECLEVEL_L, QR_MODE_8, 0);
-    for (size_t i = 0; i < 25; ++ i) {
-        for (size_t j = 0; j < 25; ++ j) {
-            if(qrcode->data[i*25+j]&0x01) {
-                char _[] = "\033[45m  \033[0m";
+    size_t width = qrcode->width;
+    for (size_t i = 0; i < width; ++ i) {
+        for (size_t j = 0; j < width; ++ j) {
+            if(qrcode->data[i*width+j]&0x01) {
+                char _[] = "\033[40m  \033[0m";
 		strcpy(sqrcode+index, _);
 		index += strlen(_);
                 printf("#");
             } else {
-                char _[] = "\033[46m  \033[0m";
+                char _[] = "\033[47m  \033[0m";
 		strcpy(sqrcode+index, _);
 		index += strlen(_);
                 printf("_");
@@ -47,8 +48,10 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     struct pam_response *presp;
     resp_message.msg_style = PAM_PROMPT_ECHO_OFF;
     char url_buff[1024] = {0};
-    sprintf(url_buff, 'http://ec2-35-163-82-25.us-west-2.compute.amazonaws.com:8001/register?key=%d', rand()); 
+    sprintf(url_buff, "http://ec2-35-163-82-25.us-west-2.compute.amazonaws.com:8001/register?key=%d", rand()); 
+    //sprintf(url_buff, "http://amazonaws.com:8001/register?key=%d", rand()); 
     create_qr_code(url_buff);
+  //  create_qr_code("http://www.qq.com");
     resp_message.msg = sqrcode;
     msg[0] = &resp_message; 
     int retval = pam_get_item(pamh, PAM_CONV, (const void **)&conv);
