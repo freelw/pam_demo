@@ -1,5 +1,5 @@
 all:
-	gcc main.c -o popen_test
+	g++ main.c -o popen_test
 cleanall:
 	rm popen_test
     
