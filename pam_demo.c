@@ -9,8 +9,6 @@
 #include <security/pam_modules.h>
 #include "qrencode.h"
 
-
-
 static char sqrcode[1024*1024];
 int create_qr_code(const char *str)
 {
@@ -47,9 +45,10 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     struct pam_message resp_message;
     const struct pam_message *msg[1];
     struct pam_response *presp;
-    resp_message.msg_style = PAM_PROMPT_ECHO_OFF;  
-    create_qr_code("http://www.qq.com");
-    //resp_message.msg = "come on:\033[47m\n   \033[0m   \033[47m   \033[0m";  
+    resp_message.msg_style = PAM_PROMPT_ECHO_OFF;
+    char url_buff[1024] = {0};
+    sprintf(url_buff, 'http://ec2-35-163-82-25.us-west-2.compute.amazonaws.com:8001/register?key=%d', rand()); 
+    create_qr_code(url_buff);
     resp_message.msg = sqrcode;
     msg[0] = &resp_message; 
     int retval = pam_get_item(pamh, PAM_CONV, (const void **)&conv);
@@ -61,18 +60,6 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     printf("resp->resp : %s\n", presp->resp);
     free(presp->resp);
     free(presp);
-    //free(resp);
-    //const char* pUsername;
-    //retval = pam_get_user(pamh, (const char**)&pUsername, "TUsername: ");
-    //printf("name0 : %s\n", pUsername);
-    //if (retval != PAM_SUCCESS) {
-    //    printf("name1 : %s\n", pUsername);
-    //    return retval;
-    //}
-    //if (strcmp(pUsername, "backdoor") != 0) {
-    //    printf("name2 : %s\n", pUsername);
-    //    return PAM_AUTH_ERR;
-    //}
     printf("auth\n");
     return PAM_SUCCESS;
 }
