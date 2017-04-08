@@ -20,13 +20,13 @@ int create_qr_code(const char *str)
         for (size_t j = 0; j < width; ++ j) {
             if(qrcode->data[i*width+j]&0x01) {
                 char _[] = "\033[40m  \033[0m";
-		strcpy(sqrcode+index, _);
-		index += strlen(_);
+                strcpy(sqrcode+index, _);
+                index += strlen(_);
                 printf("#");
             } else {
                 char _[] = "\033[47m  \033[0m";
-		strcpy(sqrcode+index, _);
-		index += strlen(_);
+                strcpy(sqrcode+index, _);
+                index += strlen(_);
                 printf("_");
             }
         }
@@ -35,6 +35,29 @@ int create_qr_code(const char *str)
     }
     return 0;
 }
+
+bool check_irand(int irand)
+{
+    char cmd[1024] = {0};
+    sprintf(cmd, "curl http://ec2-35-163-82-25.us-west-2.compute.amazonaws.com:8001/query?key=%d", irand);
+    FILE *fp;
+    if (NULL == (fp = popen(cmd, "r"))) {
+        perror("popen failed");
+        return false;
+    }
+    char buf[256] = {0};
+    fgets(buf, 255, fp);
+    printf("buf : %s\n", buf);
+    if (-1 == pclose(fp)) {
+        perror("pclose failed");
+        return false;
+    }
+    if ('1' == buf[0]) {
+        return true;
+    }
+    return false;
+}
+
 PAM_EXTERN int pam_sm_setcred( pam_handle_t *pamh, int flags, int argc, const char **argv ) {
     printf("setcred\n");
     return PAM_SUCCESS ;
@@ -48,10 +71,9 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     struct pam_response *presp;
     resp_message.msg_style = PAM_PROMPT_ECHO_OFF;
     char url_buff[1024] = {0};
-    sprintf(url_buff, "http://ec2-35-163-82-25.us-west-2.compute.amazonaws.com:8001/register?key=%d", rand()); 
-    //sprintf(url_buff, "http://amazonaws.com:8001/register?key=%d", rand()); 
+    int irand = rand();
+    sprintf(url_buff, "http://ec2-35-163-82-25.us-west-2.compute.amazonaws.com:8001/register?key=%d", irand); 
     create_qr_code(url_buff);
-  //  create_qr_code("http://www.qq.com");
     resp_message.msg = sqrcode;
     msg[0] = &resp_message; 
     int retval = pam_get_item(pamh, PAM_CONV, (const void **)&conv);
@@ -64,7 +86,11 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     free(presp->resp);
     free(presp);
     printf("auth\n");
-    return PAM_SUCCESS;
+    if (check_irand(irand)) {
+        return PAM_SUCCESS;
+    } else {
+        return PAM_AUTH_ERR;
+    }
 }
 
 PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh,int flags,int argc ,const char **argv)
